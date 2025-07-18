@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://4um7yrybrgkj"]
+
+[ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
+
+[node name="SolarSystem" type="Node2D"]
+script = ExtResource("1_hp4wh")
+
+[node name="Player" type="CharacterBody2D" parent="."]
+
+[node name="Sun" type="Node2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Sun"]
