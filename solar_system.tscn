@@ -1,29 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=3 format=3 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
+[ext_resource type="Texture2D" uid="uid://bpi8vbwcib4w6" path="res://assets/background.png" id="2_tfb7d"]
 
 [node name="SolarSystem" type="Node2D"]
 script = ExtResource("1_hp4wh")
 
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("2_tfb7d")
+
 [node name="Player" type="CharacterBody2D" parent="."]
 
-[node name="Sun" type="Node2D" parent="."]
-
-[node name="Sprite2D" type="Sprite2D" parent="Sun"]
-metadata/_aseprite_wizard_interface_config_ = {
-"pending_changes": {
-"embed_tex": true,
-"i_mode": 0,
-"keep_anim_length": false,
-"layers": [],
-"o_ex_p": "",
-"o_folder": "",
-"o_name": "",
-"only_visible": false,
-"player": "",
-"scale": "1.0",
-"slice": "",
-"source": "res://assets/sun.aseprite",
-"source_uid": 2711609783560626977
-}
-}
+[node name="Camera2D" type="Camera2D" parent="Player"]
