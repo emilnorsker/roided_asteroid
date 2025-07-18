@@ -44,22 +44,22 @@ var _editor_settings: EditorSettings = EditorInterface.get_editor_settings()
 ######################################################
 
 func default_command() -> String:
-	match OS.get_name():
-		"Windows":
-			return "C:\\\\Steam\\steamapps\\common\\Aseprite\\aseprite.exe"
-		"macOS":
-			return "/Applications/Aseprite.app/Contents/MacOS/aseprite"
-		_:
-			return 'aseprite'
+    match OS.get_name():
+        "Windows":
+            return "C:\\\\Steam\\steamapps\\common\\Aseprite\\aseprite.exe"
+        "macOS":
+            return "/Applications/Aseprite.app/Contents/MacOS/aseprite"
+        _:
+            return 'aseprite'
 
 
 func get_command() -> String:
-	var command = _editor_settings.get(_COMMAND_KEY) if _editor_settings.has_setting(_COMMAND_KEY) else ""
-	return command if command != "" else default_command()
+    var command = _editor_settings.get(_COMMAND_KEY) if _editor_settings.has_setting(_COMMAND_KEY) else ""
+    return command if command != "" else default_command()
 
 
 func set_command(command: String) -> void:
-	_editor_settings.set_setting(_COMMAND_KEY, command)
+    _editor_settings.set_setting(_COMMAND_KEY, command)
 
 
 
@@ -69,47 +69,47 @@ func set_command(command: String) -> void:
 
 # remove this config in the next major version
 func is_importer_enabled() -> bool:
-	return _get_project_setting(_IMPORTER_ENABLE_KEY, false)
+    return _get_project_setting(_IMPORTER_ENABLE_KEY, false)
 
 
 func get_default_importer() -> String:
-	return _get_project_setting(_DEFAULT_IMPORTER_KEY, IMPORTER_SPRITEFRAMES_NAME if is_importer_enabled() else IMPORTER_NOOP_NAME)
+    return _get_project_setting(_DEFAULT_IMPORTER_KEY, IMPORTER_SPRITEFRAMES_NAME if is_importer_enabled() else IMPORTER_NOOP_NAME)
 
 
 func should_remove_source_files() -> bool:
-	return _get_project_setting(_REMOVE_SOURCE_FILES_KEY, true)
+    return _get_project_setting(_REMOVE_SOURCE_FILES_KEY, true)
 
 
 func is_default_animation_loop_enabled() -> bool:
-	return _get_project_setting(_LOOP_ENABLED, true)
+    return _get_project_setting(_LOOP_ENABLED, true)
 
 
 func get_animation_loop_exception_prefix() -> String:
-	return _get_project_setting(_LOOP_EXCEPTION_PREFIX, _DEFAULT_LOOP_EX_PREFIX)
+    return _get_project_setting(_LOOP_EXCEPTION_PREFIX, _DEFAULT_LOOP_EX_PREFIX)
 
 
 func get_default_exclusion_pattern() -> String:
-	return _get_project_setting(_DEFAULT_EXCLUSION_PATTERN_KEY, "")
+    return _get_project_setting(_DEFAULT_EXCLUSION_PATTERN_KEY, "")
 
 
 func should_include_only_visible_layers_by_default() -> bool:
-	return _get_project_setting(_DEFAULT_ONLY_VISIBLE_LAYERS, false)
+    return _get_project_setting(_DEFAULT_ONLY_VISIBLE_LAYERS, false)
 
 
 func get_history_max_entries() -> int:
-	return _get_project_setting(_HISTORY_MAX_ENTRIES, _HISTORY_DEFAULT_MAX_ENTRIES)
+    return _get_project_setting(_HISTORY_MAX_ENTRIES, _HISTORY_DEFAULT_MAX_ENTRIES)
 
 
 func get_import_history() -> Array:
-	return get_plugin_metadata(_WIZARD_HISTORY, [])
+    return get_plugin_metadata(_WIZARD_HISTORY, [])
 
 
 func is_set_visible_track_automatically_enabled() -> bool:
-	return _get_project_setting(_SET_VISIBLE_TRACK_AUTOMATICALLY, false)
+    return _get_project_setting(_SET_VISIBLE_TRACK_AUTOMATICALLY, false)
 
 
 func save_import_history(history: Array):
-	set_plugin_metadata(_WIZARD_HISTORY, history)
+    set_plugin_metadata(_WIZARD_HISTORY, history)
 
 
 #=========================================================
@@ -117,101 +117,101 @@ func save_import_history(history: Array):
 #=========================================================
 ## Return config for last import done via standalone SpriteFrames import dock
 func get_standalone_spriteframes_last_import_config() -> Dictionary:
-	return get_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, {})
+    return get_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, {})
 
 ## Set config for last import done via standalone SpriteFrames import dock
 func set_standalone_spriteframes_last_import_config(data: Dictionary) -> void:
-	set_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, data)
+    set_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, data)
 
 
 func clear_standalone_spriteframes_last_import_config() -> void:
-	set_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, {})
+    set_plugin_metadata(_STANDALONE_SPRITEFRAMES_LAST_IMPORT_CFG, {})
 
 
 func get_plugin_metadata(key: String, default: Variant = null) -> Variant:
-	return _editor_settings.get_project_metadata(_CONFIG_SECTION_KEY, key, default)
+    return _editor_settings.get_project_metadata(_CONFIG_SECTION_KEY, key, default)
 
 
 func set_plugin_metadata(key: String, data: Variant):
-	_editor_settings.set_project_metadata(_CONFIG_SECTION_KEY, key, data)
+    _editor_settings.set_project_metadata(_CONFIG_SECTION_KEY, key, data)
 
 
 #######################################################
 # INITIALIZATION
 ######################################################
 func initialize_project_settings():
-	_initialize_project_cfg(_DEFAULT_EXCLUSION_PATTERN_KEY, "", TYPE_STRING)
-	_initialize_project_cfg(_DEFAULT_ONLY_VISIBLE_LAYERS, false, TYPE_BOOL)
-	_initialize_project_cfg(_LOOP_ENABLED, true, TYPE_BOOL)
-	_initialize_project_cfg(_LOOP_EXCEPTION_PREFIX, _DEFAULT_LOOP_EX_PREFIX, TYPE_STRING)
+    _initialize_project_cfg(_DEFAULT_EXCLUSION_PATTERN_KEY, "", TYPE_STRING)
+    _initialize_project_cfg(_DEFAULT_ONLY_VISIBLE_LAYERS, false, TYPE_BOOL)
+    _initialize_project_cfg(_LOOP_ENABLED, true, TYPE_BOOL)
+    _initialize_project_cfg(_LOOP_EXCEPTION_PREFIX, _DEFAULT_LOOP_EX_PREFIX, TYPE_STRING)
 
-	_initialize_project_cfg(_REMOVE_SOURCE_FILES_KEY, true, TYPE_BOOL)
-	_initialize_project_cfg(
-		_DEFAULT_IMPORTER_KEY,
-		IMPORTER_SPRITEFRAMES_NAME if is_importer_enabled() else IMPORTER_NOOP_NAME,
-		TYPE_STRING,
-		PROPERTY_HINT_ENUM,
-		",".join([
-			IMPORTER_NOOP_NAME,
-			IMPORTER_SPRITEFRAMES_NAME,
-			IMPORTER_SPRITEFRAMES_SPLIT_NAME,
-			IMPORTER_TILESET_TEXTURE_NAME,
-			IMPORTER_STATIC_TEXTURE_NAME,
-			IMPORTER_STATIC_TEXTURE_SPLIT_NAME
-		])
-	)
+    _initialize_project_cfg(_REMOVE_SOURCE_FILES_KEY, true, TYPE_BOOL)
+    _initialize_project_cfg(
+        _DEFAULT_IMPORTER_KEY,
+        IMPORTER_SPRITEFRAMES_NAME if is_importer_enabled() else IMPORTER_NOOP_NAME,
+        TYPE_STRING,
+        PROPERTY_HINT_ENUM,
+        ",".join([
+            IMPORTER_NOOP_NAME,
+            IMPORTER_SPRITEFRAMES_NAME,
+            IMPORTER_SPRITEFRAMES_SPLIT_NAME,
+            IMPORTER_TILESET_TEXTURE_NAME,
+            IMPORTER_STATIC_TEXTURE_NAME,
+            IMPORTER_STATIC_TEXTURE_SPLIT_NAME
+        ])
+    )
 
-	_initialize_project_cfg(_HISTORY_MAX_ENTRIES, _HISTORY_DEFAULT_MAX_ENTRIES, TYPE_INT)
+    _initialize_project_cfg(_HISTORY_MAX_ENTRIES, _HISTORY_DEFAULT_MAX_ENTRIES, TYPE_INT)
 
-	_initialize_project_cfg(_SET_VISIBLE_TRACK_AUTOMATICALLY, false, TYPE_BOOL)
+    _initialize_project_cfg(_SET_VISIBLE_TRACK_AUTOMATICALLY, false, TYPE_BOOL)
 
-	ProjectSettings.save()
+    ProjectSettings.save()
 
-	_initialize_editor_cfg(_COMMAND_KEY, default_command(), TYPE_STRING)
+    _initialize_editor_cfg(_COMMAND_KEY, default_command(), TYPE_STRING)
 
 
 func clear_project_settings():
-	var _all_settings = [
-		_DEFAULT_EXCLUSION_PATTERN_KEY,
-		_LOOP_ENABLED,
-		_LOOP_EXCEPTION_PREFIX,
-		_REMOVE_SOURCE_FILES_KEY,
-		_DEFAULT_IMPORTER_KEY,
-		_HISTORY_MAX_ENTRIES,
-		_SET_VISIBLE_TRACK_AUTOMATICALLY,
-		_DEFAULT_ONLY_VISIBLE_LAYERS,
-	]
-	for key in _all_settings:
-		ProjectSettings.clear(key)
-	ProjectSettings.save()
+    var _all_settings = [
+        _DEFAULT_EXCLUSION_PATTERN_KEY,
+        _LOOP_ENABLED,
+        _LOOP_EXCEPTION_PREFIX,
+        _REMOVE_SOURCE_FILES_KEY,
+        _DEFAULT_IMPORTER_KEY,
+        _HISTORY_MAX_ENTRIES,
+        _SET_VISIBLE_TRACK_AUTOMATICALLY,
+        _DEFAULT_ONLY_VISIBLE_LAYERS,
+    ]
+    for key in _all_settings:
+        ProjectSettings.clear(key)
+    ProjectSettings.save()
 
 
 func _initialize_project_cfg(key: String, default_value, type: int, hint: int = PROPERTY_HINT_NONE, hint_string = null):
-	if not ProjectSettings.has_setting(key):
-		ProjectSettings.set(key, default_value)
-	ProjectSettings.set_initial_value(key, default_value)
-	ProjectSettings.add_property_info({
-		"name": key,
-		"type": type,
-		"hint": hint,
-		"hint_string": hint_string,
-	})
+    if not ProjectSettings.has_setting(key):
+        ProjectSettings.set(key, default_value)
+    ProjectSettings.set_initial_value(key, default_value)
+    ProjectSettings.add_property_info({
+        "name": key,
+        "type": type,
+        "hint": hint,
+        "hint_string": hint_string,
+    })
 
 
 func _get_project_setting(key: String, default_value):
-	if not ProjectSettings.has_setting(key):
-		return default_value
+    if not ProjectSettings.has_setting(key):
+        return default_value
 
-	var p = ProjectSettings.get(key)
-	return p if p != null else default_value
+    var p = ProjectSettings.get(key)
+    return p if p != null else default_value
 
 
 func _initialize_editor_cfg(key: String, default_value, type: int, hint: int = PROPERTY_HINT_NONE):
-	if not _editor_settings.has_setting(key):
-		_editor_settings.set(key, default_value)
-	_editor_settings.set_initial_value(key, default_value, false)
-	_editor_settings.add_property_info({
-		"name": key,
-		"type": type,
-		"hint": hint,
-	})
+    if not _editor_settings.has_setting(key):
+        _editor_settings.set(key, default_value)
+    _editor_settings.set_initial_value(key, default_value, false)
+    _editor_settings.add_property_info({
+        "name": key,
+        "type": type,
+        "hint": hint,
+    })

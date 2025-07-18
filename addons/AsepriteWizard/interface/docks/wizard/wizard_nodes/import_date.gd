@@ -3,4 +3,4 @@ extends Label
 
 
 func set_date(timestamp: String):
-	self.text = timestamp
+    self.text = timestamp
