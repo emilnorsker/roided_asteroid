@@ -9,9 +9,9 @@ func _ready():
 	var tex_planet_2 = preload("res://assets/not_earth.png")
 
 	# Positional argument calls:
-	sun = create_planet(25.0, 1.0, 200.0, 150.0, 1, tex_sun, null, false)
-	create_planet(200.0, 0.7, 200.0, 100.0, 2, tex_planet_1, sun, false)
-	create_planet(300.0, 0.5, 50.0, 200.0, 2, tex_planet_2, sun, false)
+	sun = create_planet(25.0, 1.0, 100.0, 150.0, 1, tex_sun, null, false)
+	create_planet(200.0, 0.7, 50.0, 100.0, 2, tex_planet_1, sun, false)
+	create_planet(300.0, 0.5, 30.0, 200.0, 2, tex_planet_2, sun, false)
 
 
 
