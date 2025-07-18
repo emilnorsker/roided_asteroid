@@ -1,5 +1,6 @@
 @tool
 extends CanvasLayer
+class_name PostFx
 
 @export var effects : Array[FXBase] = []:
 	set(value):
@@ -14,6 +15,7 @@ func _ready() -> void:
 	_update_effects()
 
 func _process(_delta: float) -> void:
+	_update_effects()
 	if !Engine.is_editor_hint():
 		if always_update:
 			_update_effects()
@@ -54,6 +56,7 @@ func _update_effects() -> void:
 
 func _on_fx_changed(rect: ColorRect, fx: FXBase) -> void:
 	if not is_instance_valid(rect):
+		print("NOT VALID")
 		return
 	
 	rect.visible = fx.enabled

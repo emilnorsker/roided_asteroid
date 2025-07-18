@@ -26,6 +26,8 @@ func _ready():
 	# hand the list to the player for gravity / capture tests
 	var player = $Player
 	player.planets = planets
+	
+	set_fx()
 
 func _spawn_planet(radius: float, tex_path: String):
 	var planet = planet_scene.instantiate()
@@ -43,3 +45,17 @@ func _spawn_planet(radius: float, tex_path: String):
 	planets.append(planet)
 	add_child(planet)
 	return planet
+
+func set_fx():
+	var fx: PostFx = $PostFX
+	var crt: CRTShaderFX = fx.effects[0]
+	crt.resolution = Vector2(1920.0, 1080.0)
+
+	crt.roll = false
+	crt.roll_size = 0
+	crt.aberration = 0.01
+	crt.scanlines_opacity = 0.02
+	crt.grille_opacity = 0.002
+	crt.warp_amount	= 0.8
+	crt.distort_intensity = 0
+	crt.noise_opacity = 0
