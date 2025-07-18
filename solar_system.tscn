@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=5 format=3 uid="uid://pp4oek53g8bc"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Texture2D" uid="uid://bpi8vbwcib4w6" path="res://assets/background.png" id="2_tfb7d"]
+[ext_resource type="Script" uid="uid://c18fybvvb02v8" path="res://player.gd" id="3_tfb7d"]
+[ext_resource type="Texture2D" uid="uid://cb5bc67f1n1ek" path="res://assets/asteroid.png" id="4_auk15"]
 
 [node name="SolarSystem" type="Node2D"]
 script = ExtResource("1_hp4wh")
@@ -10,5 +12,11 @@ script = ExtResource("1_hp4wh")
 texture = ExtResource("2_tfb7d")
 
 [node name="Player" type="CharacterBody2D" parent="."]
+position = Vector2(277, -139)
+script = ExtResource("3_tfb7d")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+scale = Vector2(0.401227, 0.367309)
+texture = ExtResource("4_auk15")

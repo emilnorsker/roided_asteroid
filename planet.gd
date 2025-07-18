@@ -1,39 +1,35 @@
 extends Node2D
 
-@export var orbit_radius: float = 300.0
-@export var orbit_speed: float = 1.0         # radians/sec
-@export var planet_radius: float = 32.0
-@export var soi_radius: float = 200.0
-@export var orbit_center: Node2D           # The Sun (or other body)
-@export var gravity: float = 1.0
-@export var gravity_prio: int = 1
-@export var is_destructible: bool = false
+# -----------------------------------------------------------------------------
+# Minimal arcade-orbit body.
+# The planet moves under the gravitational pull of a fixed centre at (0,0)
+# (the SolarSystem node’s origin). SolarSystem sets the initial `vel`.
+# No exported vars – all numbers live in code for leaner runtime.
+# -----------------------------------------------------------------------------
 
-var angle := 0.0
+const MU_SUN: float = 5.0e4   # Gravitational parameter of the sun (tune once)
 
-func _ready():
-	var tex = $Sprite2D.texture
-	if tex:
-		var texture_size = tex.get_size().x  # assumes square texture
-		var scale_factor = planet_radius / (texture_size / 2.0)  # match radius to texture's *visual* radius
-		$Sprite2D.scale = Vector2.ONE * scale_factor
-	else:
-		push_warning("No texture set on Sprite2D!")
+# Radius that counts as this planet’s sphere-of-influence.  
+# Used by the player script to decide capture.
+var soi_radius: float = 80000.0
 
-	# Set SOI size
-	var shape = $Area2D.get_node("CollisionShape2D").shape
-	if shape is CircleShape2D:
-		shape.radius = soi_radius
+# Mass parameter used by the player’s weak-gravity pull.  
+# Keep as simple scalar; doesn’t need to be physically correct.
+var gravity: float = 800_000.0
 
+# Whether the player can snap into spring orbit around this body
+var allow_capture: bool = true
 
+# Current velocity (set by the spawner)
+var vel: Vector2 = Vector2.ZERO
 
-func _process(delta):
-	angle += orbit_speed * delta
+func _physics_process(dt: float) -> void:
+	# Two-body acceleration toward origin
+	var r: Vector2 = global_position
+	var dist_sq: float = max(1.0, r.length_squared())
+	var acc: Vector2 = -MU_SUN * r / pow(dist_sq, 1.5)
+	# clamp max acceleration to 1000
+	acc = acc.clamp(Vector2(-1000.0, -1000.0), Vector2(1000.0, 1000.0))
 
-	if orbit_center:
-		var center = orbit_center.global_position
-		global_position = center + Vector2(orbit_radius, 0).rotated(angle)
-
-func _on_Area2D_body_entered(body):
-	if body.name == "Player":
-		body.gravity_source = self  # Set planet as gravity source
+	vel += acc * dt
+	global_position += vel * dt
