@@ -9,13 +9,9 @@ extends Node2D
 
 const MU_SUN: float = 5.0e4   # Gravitational parameter of the sun (tune once)
 
-# Radius that counts as this planet’s sphere-of-influence.  
-# Used by the player script to decide capture.
-var soi_radius: float = 80000.0
-
 # Mass parameter used by the player’s weak-gravity pull.  
 # Keep as simple scalar; doesn’t need to be physically correct.
-var gravity: float = 800_000.0
+var gravity: float = 8_000.0
 
 # Whether the player can snap into spring orbit around this body
 var allow_capture: bool = true

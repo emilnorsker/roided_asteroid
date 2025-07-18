@@ -9,8 +9,7 @@ func _ready():
 	# Spawn sun as a planet at the origin (stationary)
 	var sun = _spawn_planet(0.0, "res://assets/sun.png")
 	sun.vel = Vector2.ZERO
-	sun.soi_radius = 80000.0
-	sun.gravity = 80000.0
+	sun.gravity = 80_000.0
 
 	# radius (px) and texture path pairs for regular planets
 	var defs = [
