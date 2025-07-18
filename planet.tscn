@@ -1,15 +1,42 @@
-[gd_scene load_steps=3 format=3 uid="uid://dahq14okd0t2s"]
+[gd_scene load_steps=6 format=3 uid="uid://dahq14okd0t2s"]
 
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="1_1odxm"]
+[ext_resource type="Texture2D" uid="uid://4fi82yembwks" path="res://assets/earth.png" id="2_mtr83"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mtr83"]
+friction = 0.8
+rough = true
+bounce = 0.1
+absorbent = true
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mtr83"]
+radius = 58.0
 
-[node name="Planet" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_a75xc"]
+radius = 500.0
+
+[node name="Planet" type="RigidBody2D"]
+mass = 5000.0
+physics_material_override = SubResource("PhysicsMaterial_mtr83")
+gravity_scale = 0.2
+center_of_mass_mode = 1
+inertia = 14.25
+angular_damp = 8.0
 script = ExtResource("1_1odxm")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_mtr83")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_mtr83")
 
 [node name="Area2D" type="Area2D" parent="."]
+gravity_space_override = 1
+gravity_point = true
+gravity_point_unit_distance = 20.0
+gravity_point_center = Vector2(0, 0)
+gravity_direction = Vector2(0, 0)
+gravity = 16000.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-shape = SubResource("CircleShape2D_mtr83")
+shape = SubResource("CircleShape2D_a75xc")

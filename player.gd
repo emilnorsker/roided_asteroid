@@ -1,98 +1,86 @@
-extends CharacterBody2D
+extends RigidBody2D
 
 # --- Designer knobs ---------------------------------------------------------
 @export var show_debug_path: bool = true
 
 # Preview
-const BOOST_IMPULSE: float = 200.0
+const BOOST_IMPULSE: float = 700.0
 const GRAV_SCALE: float = 2.0	# global tuning knob
 const GRAVITY_EXPONENT: float = 1.2  # 1 = slow fall-off, 2 = inverse-square
 
 const PRED_TIME: float = 3.0
-const PRED_STEPS: int = 5
+const PRED_STEPS: int = 60
+
+# Reference to Sun's gravity area for prediction
+@onready var sun_area: Area2D = get_node("../Sun/InfluenceCircle")
+
+# Cached gravitational parameter μ = g * d^2 (updated in _ready)
+var mu: float = 0.0
+
+var planets = []
 
 # --- Runtime state ----------------------------------------------------------
-var planets: Array = []		# injected by solar_system.gd
-var lin_vel: Vector2 = Vector2.ZERO
-
+# No custom gravity list needed – Area2D on the Sun handles it.
 
 ## Continuous thrust handled each physics tick --------------------------------
 ## Keys held down apply constant acceleration, giving smooth steering.
 
+# Optional: give the ship an initial drift
 func _ready():
-	var r_vec: Vector2 = global_position
-	var r: float = r_vec.length()
-	if r > 0.0:
-		var tangential: Vector2 = Vector2(-r_vec.y, r_vec.x).normalized()
-		lin_vel = tangential * sqrt(5.0e4 / r) * 10
+	linear_velocity = Vector2.ZERO
+	if sun_area:
+		mu = sun_area.gravity * pow(sun_area.gravity_point_unit_distance, 2)
 
 func _physics_process(dt: float) -> void:
-	# Player thrust
-	var thrust: Vector2 = Vector2.ZERO
-	if Input.is_action_pressed("left"):
-		thrust.x -= 1
-	if Input.is_action_pressed("right"):
-		thrust.x += 1
-	if Input.is_action_pressed("up"):
-		thrust.y -= 1
-	if Input.is_action_pressed("down"):
-		thrust.y += 1
+	var thrust := Vector2(
+		Input.get_action_strength("right") - Input.get_action_strength("left"),
+		Input.get_action_strength("down") - Input.get_action_strength("up")
+	)
 	if thrust != Vector2.ZERO:
-		lin_vel += thrust.normalized() * BOOST_IMPULSE * dt
-	lin_vel += _gravity_accel_at() * dt
-	# Clamp velocity components to ±1000 to avoid extreme speeds
-	lin_vel = lin_vel.clamp(Vector2(-1500, -1500), Vector2(1500, 1500))
-	global_position += lin_vel * dt
+		linear_velocity += thrust.normalized() * BOOST_IMPULSE * dt
 
+	# Clamp speed so the ship remains controllable
+	linear_velocity = linear_velocity.clamp(Vector2(-1500, -1500), Vector2(1500, 1500))
 	if show_debug_path:
 		queue_redraw()
 
-# ------------------------------------------------------------------
-func _gravity_accel_at() -> Vector2:
-	var total_acceleration: Vector2 = Vector2.ZERO
-	for planet in planets:
-		var vector_to_planet: Vector2 = planet.global_position - global_position
-		# Use distance (not squared) and a tunable exponent for softer fall-off
-		var distance: float = max(1.0, vector_to_planet.length())
-		var strength: float = (planet.gravity / pow(distance, GRAVITY_EXPONENT)) * GRAV_SCALE
-		total_acceleration += vector_to_planet.normalized() * strength
-	return total_acceleration
+# Removed custom gravity calculation – Sun's Area2D now drives gravity.
 
 # ------------------------------------------------------------------
 func _draw():
 	if !show_debug_path:
 		return
 
-	var simulated_position: Vector2 = global_position
-	var simulated_velocity: Vector2 = lin_vel
-	var delta_time: float = PRED_TIME / PRED_STEPS
-
-	# snapshot planets
-	var simulated_planet_positions: Array = []
-	var simulated_planet_velocities: Array = []
+	if mu == 0:
+		return
+	var pos: Vector2 = global_position
+	var vel: Vector2 = linear_velocity
+	var dt: float = PRED_TIME / PRED_STEPS
+	var dot_r: float = 2.0
+	# snapshot planet states
+	var p_pos: Array = []
+	var p_vel: Array = []
 	for planet in planets:
-		simulated_planet_positions.append(planet.global_position)
-		simulated_planet_velocities.append(planet.vel)
+		p_pos.append(planet.global_position)
+		p_vel.append(planet.linear_velocity)
 
-	var dot_radius: float = 2.0
-	for _step in range(PRED_STEPS):
-		var total_gravity: Vector2 = Vector2.ZERO
-		for index in range(simulated_planet_positions.size()):
-			# vector from ship to planet
-			var vector_to_planet: Vector2 = simulated_planet_positions[index] - simulated_position
-			var distance: float = max(1.0, vector_to_planet.length())
-			# gravity toward this planet
-			var strength: float = (planets[index].gravity / pow(distance, GRAVITY_EXPONENT)) * GRAV_SCALE
-			total_gravity += vector_to_planet.normalized() * strength
-
-			# advance planet one step (sun-centric two-body)
-			var planet_acceleration: Vector2 = -5.0e4 * simulated_planet_positions[index] / pow(distance, 1.5)
-			simulated_planet_velocities[index] += planet_acceleration * delta_time
-			simulated_planet_positions[index] += simulated_planet_velocities[index] * delta_time
-		# end planet loop
-
-		# advance ship
-		simulated_velocity += total_gravity * delta_time
-		simulated_position += simulated_velocity * delta_time
-		draw_circle(to_local(simulated_position), dot_radius, Color.YELLOW)
-	# end step loop
+	for _step in PRED_STEPS:
+		# ----------------------------------------
+		# Update planets (sun-centric two-body)
+		for idx in p_pos.size():
+			var pp: Vector2 = p_pos[idx]
+			var acc_p: Vector2 = -mu * pp / pow(max(1.0, pp.length_squared()), 1.5)
+			p_vel[idx] += acc_p * dt
+			p_pos[idx] += p_vel[idx] * dt
+		# ----------------------------------------n
+		# Acceleration on player
+		var acc: Vector2 = -mu * pos / pow(max(1.0, pos.length_squared()), 1.5)
+		for idx in p_pos.size():
+			var area: Area2D = planets[idx].get_node_or_null("Area2D")
+			if area:
+				var mu_p = area.gravity * pow(area.gravity_point_unit_distance, 2)
+				var r_vec: Vector2 = pos - p_pos[idx]
+				acc += -mu_p * r_vec / pow(max(1.0, r_vec.length_squared()), 1.5)
+		vel += acc * dt
+		pos += vel * dt
+		draw_circle(to_local(pos), dot_r, Color.YELLOW)

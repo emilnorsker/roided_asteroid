@@ -1,4 +1,4 @@
-extends Node2D
+extends RigidBody2D
 
 # -----------------------------------------------------------------------------
 # Minimal arcade-orbit body.
@@ -7,7 +7,9 @@ extends Node2D
 # No exported vars – all numbers live in code for leaner runtime.
 # -----------------------------------------------------------------------------
 
-const MU_SUN: float = 5.0e4   # Gravitational parameter of the sun (tune once)
+# Removed manual velocity integration – the built-in physics engine now
+# handles motion entirely. Planets are `RigidBody2D`s that respond to
+# the Sun’s point gravity set in `solar_system.gd`.
 
 # Mass parameter used by the player’s weak-gravity pull.  
 # Keep as simple scalar; doesn’t need to be physically correct.
@@ -16,16 +18,17 @@ var gravity: float = 8_000.0
 # Whether the player can snap into spring orbit around this body
 var allow_capture: bool = true
 
-# Current velocity (set by the spawner)
-var vel: Vector2 = Vector2.ZERO
+# Sun gravitational parameter (match solar_system)
+const SUN_MU: float = 8.0e4
 
-func _physics_process(dt: float) -> void:
-	# Two-body acceleration toward origin
+func _ready() -> void:
+	custom_integrator = true
+	linear_damp = 0.0
+	angular_damp = 0.0
+	gravity_scale = 0.0   # ignore Area2D gravity
+
+func _integrate_forces(state: PhysicsDirectBodyState2D) -> void:
 	var r: Vector2 = global_position
 	var dist_sq: float = max(1.0, r.length_squared())
-	var acc: Vector2 = -MU_SUN * r / pow(dist_sq, 1.5)
-	# clamp max acceleration to 1000
-	acc = acc.clamp(Vector2(-1000.0, -1000.0), Vector2(1000.0, 1000.0))
-
-	vel += acc * dt
-	global_position += vel * dt
+	var acc: Vector2 = -SUN_MU * r / pow(dist_sq, 1.5)
+	state.linear_velocity += acc * state.step
