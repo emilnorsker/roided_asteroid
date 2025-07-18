@@ -7,18 +7,24 @@ extends Node2D
 @export var orbit_center: Node2D           # The Sun (or other body)
 @export var gravity: float = 1.0
 @export var gravity_prio: int = 1
+@export var is_destructible: bool = false
 
 var angle := 0.0
 
 func _ready():
-	var base_texture_radius = 64.0  # Based on a 64x64 texture
-	var scale_factor = planet_radius / base_texture_radius
-	$Sprite2D.scale = Vector2.ONE * scale_factor
+	var tex = $Sprite2D.texture
+	if tex:
+		var texture_size = tex.get_size().x  # assumes square texture
+		var scale_factor = planet_radius / (texture_size / 2.0)  # match radius to texture's *visual* radius
+		$Sprite2D.scale = Vector2.ONE * scale_factor
+	else:
+		push_warning("No texture set on Sprite2D!")
 
 	# Set SOI size
 	var shape = $Area2D.get_node("CollisionShape2D").shape
 	if shape is CircleShape2D:
 		shape.radius = soi_radius
+
 
 
 func _process(delta):
