@@ -34,11 +34,11 @@ func _spawn_planet(radius: float, tex_path: String):
 	var pos_y = 1 if randf() > 0.5 else -1
 	planet.global_position = Vector2(radius * pos_x, radius* randf() * pos_y)
 
-	var speed: float = 25_0000
+	var speed = 0.0
 	if radius > 0.0:
 		speed = sqrt(MU_SUN / radius)
 	planet.vel = Vector2(0, speed)  # tangent +Y
-
+	
 	planet.get_node("Sprite2D").texture = load(tex_path)
 
 	planets.append(planet)
