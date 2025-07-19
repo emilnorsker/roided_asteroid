@@ -6,75 +6,82 @@ var satellite_scene = preload("res://satellite.tscn")
 
 var planets: Array = []
 
-func _ready():
-	# Configure Sun's gravity influence programmatically to guarantee correct values
-	var area: Area2D = $Sun/InfluenceCircle
-	area.gravity_point = true      # strong central pull
-	area.gravity_space_override = Area2D.SPACE_OVERRIDE_COMBINE
-	# radius (px) and texture path pairs for regular planets
-	var defs = [
-		{"r": 200.0, "tex": "res://assets/earth.png"},
-		{"r": 620.0, "tex": "res://assets/not_earth.png"},
-		{"r": 350.0, "tex": "res://assets/not_earth.png"},
-		{"r": 820.0, "tex": "res://assets/earth.png"},
-		{"r": 950.0, "tex": "res://assets/not_earth.png"},
-		{"r": 500.0, "tex": "res://assets/not_earth.png"},
-		{"r": 250.0, "tex": "res://assets/not_earth.png"},
-		{"r": 800.0, "tex": "res://assets/earth.png"},
-		{"r": 1100.0, "tex": "res://assets/earth.png"},
-		{"r": 1200.0, "tex": "res://assets/not_earth.png"},
-		{"r": 1400.0, "tex": "res://assets/not_earth.png"},
-		{"r": 1600.0, "tex": "res://assets/earth.png"},
-		{"r": 1800.0, "tex": "res://assets/not_earth.png"},
-		{"r": 2000.0, "tex": "res://assets/not_earth.png"},
-		{"r": 1200.0, "tex": "res://assets/earth.png"},
-		{"r": 2400.0, "tex": "res://assets/not_earth.png"},
-		# {"r": 1650.0, "tex": "res://assets/not_earth.png"},
-		# {"r": 1880.0, "tex": "res://assets/earth.png"},
-		# {"r": 2500.0, "tex": "res://assets/not_earth.png"},
-		# {"r": 320.0, "tex": "res://assets/not_earth.png"},
-		# {"r": 340.0, "tex": "res://assets/earth.png"},
-		# {"r": 1200.0, "tex": "res://assets/not_earth.png"}
-	]
+const PLANET_BASE_RADIUS := 58.0       # sprite / collision radius before scaling
+const MAX_SPAWN_RADIUS   := 1500.0     # distance from Sun centre
+const MIN_SPAWN_RADIUS   := 150.0      # keep them out of the Sun sprite
+const MAX_SPAWN_ATTEMPTS := 40         # safety-net to avoid infinite loops
 
-	for d in defs:
-		# pass
-		_spawn_planet(d.r, d.tex)
-	# hand the list to the player for gravity / capture tests
+# textures we can pick from
+var planet_textures := [
+	"res://assets/earth.png",
+	"res://assets/not_earth.png"
+]
+
+func _ready():
+	for _i in range(10):
+		var tex_path: String = planet_textures.pick_random()
+		_spawn_planet_no_overlap(tex_path)
+
 	var player = $Player
 	player.planets = planets
-	
+
 	set_fx()
 
-func _spawn_planet(radius: float, tex_path: String):
-	var planet = planet_scene.instantiate()
-	var pos_x = 1 if randf() > 0.5 else -1
-	var pos_y = 1 if randf() > 0.5 else -1
-	planet.global_position = Vector2(radius * pos_x, radius* randf() * pos_y)
-	planet.linear_damp = 0.0
 
-	# Initial tangential speed for (approx.) circular orbit
-	var r_vec: Vector2 = planet.global_position
-	var r_len: float = max(1.0, r_vec.length())
-	var sun_area: Area2D = $Sun/InfluenceCircle
-	var unit_d := sun_area.gravity_point_unit_distance
-	var mu := sun_area.gravity * unit_d * unit_d   # effective G*My
-	var scale: float = planet.gravity_scale
-	if scale <= 0:
-		#scale = 1.0
-		pass
-	var speed: float = sqrt(mu * scale / r_len)    # circular orbit speed adjusted
-	# Optional scaling factor to exaggerate orbits
-	# speed *= 1.0
-	# Tangential direction is 90° rotated (-y, x)
-	var tangent_dir: Vector2 = Vector2(-r_vec.y, r_vec.x).normalized()
-	planet.linear_velocity = tangent_dir * speed
+func _find_free_position(new_radius: float) -> Vector2:
+	var tries: int = 0
 	
+	while tries < MAX_SPAWN_ATTEMPTS:
+		# random radius & angle around the Sun
+		var r: float = randf_range(MIN_SPAWN_RADIUS, MAX_SPAWN_RADIUS)
+		var angle: float = randf() * PI * 2.0
+		var pos: Vector2 = Vector2(cos(angle), sin(angle)) * r
+
+		var ok: bool = true
+		for p in planets:
+			var other_r: float = PLANET_BASE_RADIUS * p.scale.x
+			if pos.distance_to(p.global_position) < new_radius + other_r:
+				ok = false
+				break
+		if pos.distance_to($Player.global_position) < 100:
+			ok = false
+		if ok:
+			return pos
+		tries += 1
+	push_warning("Could not find non-overlapping spot after %d tries" % tries)
+	return Vector2.ZERO   # fallback – may overlap
+
+func _spawn_planet_no_overlap(tex_path: String):
+	var planet = planet_scene.instantiate()
+
+	# you can randomise scale if desired; here we keep it 1
+	#planet.scale = Vector2.ONE * randf_range(0.5, 3.5)
+	var eff_radius: float = PLANET_BASE_RADIUS * planet.scale.x
+
+	planet.global_position = _find_free_position(eff_radius)
+	_init_planet_dynamics(planet)
 	planet.get_node("Sprite2D").texture = load(tex_path)
 	_spawn_satellites(planet, randi() % 3 + 1)
 	planets.append(planet)
 	add_child(planet)
-	return planet
+
+func _init_planet_dynamics(planet: RigidBody2D):
+	planet.linear_damp = 0.0
+	# Enable interaction with the Sun’s Area2D gravity.
+	planet.gravity_scale = 1.0
+	var radius = planet.global_position.distance_to($Sun.global_position)
+	var sun_area: Area2D = $Sun/InfluenceCircle
+
+	# 2) Use the same μ that Godot uses internally: μ = g * scale * d₀²
+	var mu: float = sun_area.gravity \
+		* planet.gravity_scale \
+		* pow(sun_area.gravity_point_unit_distance, 2) 
+
+	# Circular-orbit speed.
+	var speed: float = sqrt(mu / radius)
+
+	var tangent_dir: Vector2 = Vector2(-planet.global_position.y, planet.global_position.x).normalized()
+	planet.linear_velocity = tangent_dir * speed
 
 func _spawn_satellites(planet: Node2D, count: int):
 	for i in count:
@@ -101,7 +108,6 @@ func set_fx():
 	var fx: PostFx = $PostFX
 	var crt: CRTShaderFX = fx.effects[0]
 	crt.resolution = Vector2(1920.0, 1080.0)
-
 	crt.roll = false
 	crt.roll_size = 0
 	crt.aberration = 0.01
