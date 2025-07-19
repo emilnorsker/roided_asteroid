@@ -3,6 +3,9 @@ extends Node2D
 
 var planet_scene = preload("res://planet.tscn")
 var satellite_scene = preload("res://satellite.tscn")
+var tex_satellite_1 = preload("res://assets/satelite_1.png")
+var tex_satellite_2 = preload("res://assets/satelite_2.png")
+
 var planets: Array = []
 
 func _ready():
@@ -70,34 +73,30 @@ func _spawn_planet(radius: float, tex_path: String):
 	planet.linear_velocity = tangent_dir * speed
 	
 	planet.get_node("Sprite2D").texture = load(tex_path)
-	var num_sats = randi() % 3 + 1  # 1 to 3 satellites
-	for i in num_sats:
-		_spawn_satellite(planet, 30.0 + randf() * 50.0)  # random height 30–80 px
+	_spawn_satellites(planet, randi() % 3 + 1)
 	planets.append(planet)
 	add_child(planet)
 	return planet
 
-func _spawn_satellite(planet: RigidBody2D, height: float):
-	var satellite = satellite_scene.instantiate()
-	planet.add_child(satellite)
-	
-	# Set local position (relative to planet)
-	var angle = randf() * TAU
-	var local_pos = Vector2(height, 0).rotated(angle)
-	satellite.position = local_pos
+func _spawn_satellites(planet: Node2D, count: int):
+	for i in count:
+		var sat = preload("res://satellite.tscn").instantiate()
+		sat.center_node = planet
+		sat.orbit_radius = 80.0 + randf_range(10.0, 120.0)
+		sat.orbit_speed = randf_range(0.5, 1.5)
 
-	# Calculate orbital speed around the planet
-	var mu = planet.gravity
-	var speed = sqrt(mu / height)
-	var tangent = Vector2(-local_pos.y, local_pos.x).normalized()
-	
-	# Inherit parent's velocity (converted to local)
-	satellite.linear_velocity = tangent * speed + planet.linear_velocity
+		# Choose texture based on planet texture
+		var tex_path = planet.get_node("Sprite2D").texture.resource_path
+		if "earth.png" in tex_path:
+			sat.get_node("Sprite2D").texture = preload("res://assets/satelite_1.png")
+		else:
+			sat.get_node("Sprite2D").texture = preload("res://assets/satelite_2.png")
 
-	# Optional: assign a texture
-	var sprite = satellite.get_node("Sprite2D")
-	if sprite:
-		sprite.texture = load("res://assets/satellite_1.png")
+		add_child(sat)
+
+
+	planets.append(planet)
+
 
 
 func set_fx():
