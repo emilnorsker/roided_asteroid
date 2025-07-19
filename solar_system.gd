@@ -20,6 +20,20 @@ func _ready():
 		{"r": 500.0, "tex": "res://assets/not_earth.png"},
 		{"r": 250.0, "tex": "res://assets/not_earth.png"},
 		{"r": 800.0, "tex": "res://assets/earth.png"},
+		{"r": 1100.0, "tex": "res://assets/earth.png"},
+		{"r": 1200.0, "tex": "res://assets/not_earth.png"},
+		{"r": 1400.0, "tex": "res://assets/not_earth.png"},
+		{"r": 1600.0, "tex": "res://assets/earth.png"},
+		{"r": 1800.0, "tex": "res://assets/not_earth.png"},
+		{"r": 2000.0, "tex": "res://assets/not_earth.png"},
+		{"r": 1200.0, "tex": "res://assets/earth.png"},
+		{"r": 2400.0, "tex": "res://assets/not_earth.png"},
+		# {"r": 1650.0, "tex": "res://assets/not_earth.png"},
+		# {"r": 1880.0, "tex": "res://assets/earth.png"},
+		# {"r": 2500.0, "tex": "res://assets/not_earth.png"},
+		# {"r": 320.0, "tex": "res://assets/not_earth.png"},
+		# {"r": 340.0, "tex": "res://assets/earth.png"},
+		# {"r": 1200.0, "tex": "res://assets/not_earth.png"}
 	]
 
 	for d in defs:
@@ -46,7 +60,8 @@ func _spawn_planet(radius: float, tex_path: String):
 	var mu := sun_area.gravity * unit_d * unit_d   # effective G*My
 	var scale: float = planet.gravity_scale
 	if scale <= 0:
-		scale = 1.0
+		#scale = 1.0
+		pass
 	var speed: float = sqrt(mu * scale / r_len)    # circular orbit speed adjusted
 	# Optional scaling factor to exaggerate orbits
 	# speed *= 1.0
