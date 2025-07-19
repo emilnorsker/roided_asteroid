@@ -2,6 +2,7 @@ extends Node2D
 
 
 var planet_scene = preload("res://planet.tscn")
+var satellite_scene = preload("res://satellite.tscn")
 var planets: Array = []
 
 func _ready():
@@ -54,10 +55,35 @@ func _spawn_planet(radius: float, tex_path: String):
 	planet.linear_velocity = tangent_dir * speed
 	
 	planet.get_node("Sprite2D").texture = load(tex_path)
-
+	var num_sats = randi() % 3 + 1  # 1 to 3 satellites
+	for i in num_sats:
+		_spawn_satellite(planet, 30.0 + randf() * 50.0)  # random height 30–80 px
 	planets.append(planet)
 	add_child(planet)
 	return planet
+
+func _spawn_satellite(planet: RigidBody2D, height: float):
+	var satellite = satellite_scene.instantiate()
+	planet.add_child(satellite)
+	
+	# Set local position (relative to planet)
+	var angle = randf() * TAU
+	var local_pos = Vector2(height, 0).rotated(angle)
+	satellite.position = local_pos
+
+	# Calculate orbital speed around the planet
+	var mu = planet.gravity
+	var speed = sqrt(mu / height)
+	var tangent = Vector2(-local_pos.y, local_pos.x).normalized()
+	
+	# Inherit parent's velocity (converted to local)
+	satellite.linear_velocity = tangent * speed + planet.linear_velocity
+
+	# Optional: assign a texture
+	var sprite = satellite.get_node("Sprite2D")
+	if sprite:
+		sprite.texture = load("res://assets/satellite_1.png")
+
 
 func set_fx():
 	var fx: PostFx = $PostFX
