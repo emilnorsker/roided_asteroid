@@ -148,13 +148,13 @@ func trigger_shockwave(world_pos: Vector2):
 
 	var mat: ShaderMaterial = _shockwave_rect.material as ShaderMaterial
 	mat.set_shader_parameter("center", uv)
-	mat.set_shader_parameter("radius", 0.05)
+	mat.set_shader_parameter("radius", 0.1)
 
 	_shockwave_rect.visible = true
 
 	var t := create_tween()
 	# Grow a bit larger and slower for a punchier feel
-	const FINAL_RADIUS := 0.2
+	const FINAL_RADIUS := 0.25
 	const DURATION := 0.3
 	t.tween_property(mat, "shader_parameter/radius", FINAL_RADIUS, DURATION)
 	t.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

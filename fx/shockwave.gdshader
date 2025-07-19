@@ -2,7 +2,7 @@ shader_type canvas_item;
 
 /* Distortion / Shockwave – based on https://godotshaders.com/shader/distortion/ (CC0) */
 uniform float strength  : hint_range(0.0, 0.1, 0.001) = 0.0008;
-uniform vec2  center    = vec2(0.5, 0.5);      // screen-space UV (0-1)
+uniform vec2  center    = vec2(0.25, 0.25);      // screen-space UV (0-1)
 uniform float radius    : hint_range(0.0, 1.0, 0.001) = 0.0; // animated via script
 
 uniform float aberration: hint_range(0.0, 1.0, 0.001) = 0.01;
