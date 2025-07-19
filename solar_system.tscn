@@ -1,21 +1,34 @@
-[gd_scene load_steps=20 format=4 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=21 format=4 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
-[ext_resource type="PackedScene" path="res://gameui.tscn" id="2_lkgeh"]
+[ext_resource type="PackedScene" uid="uid://c6xs6rnnuvofu" path="res://gameui.tscn" id="2_lkgeh"]
 [ext_resource type="Texture2D" uid="uid://bi52y7yu8ayyb" path="res://assets/sun.png" id="3_lkgeh"]
 [ext_resource type="Script" uid="uid://c18fybvvb02v8" path="res://player.gd" id="3_tfb7d"]
+[ext_resource type="Shader" uid="uid://cruu5upbv0spn" path="res://background.gdshader" id="3_wc7ei"]
 [ext_resource type="Texture2D" uid="uid://dwtn3w3fo5cit" path="res://assets/asteroid.png" id="4_auk15"]
 [ext_resource type="Script" uid="uid://d15nobs3uuxeb" path="res://addons/postfx/nodes/PostFX.gd" id="4_fcwkm"]
 [ext_resource type="Script" uid="uid://bvbw3ejkm2bck" path="res://addons/postfx/scripts/FXBase.gd" id="5_3s371"]
 [ext_resource type="Script" uid="uid://phuwmce72hmx" path="res://camera_2d.gd" id="5_lkgeh"]
 [ext_resource type="Script" uid="uid://2d4v81y7bb77" path="res://addons/postfx/effects/CRTFX.gd" id="6_lkgeh"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_ms4l2"]
-
 [sub_resource type="PortableCompressedTexture2D" id="PortableCompressedTexture2D_3s371"]
 _data = PackedByteArray("AAADAAUAAAABAAAAAAQAAAAEAABYAAAAUklGRlAAAABXRUJQVlA4TEMAAAAv/8P/AAdQkZLUpf8BgUCyv/kERfQ/4z//+c9//vOf//znP//5z3/+85///Oc///nPf/7zn//85z//+c9//vOf//zfAA==")
 size_override = Vector2(1024, 1024)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uqwdu"]
+shader = ExtResource("3_wc7ei")
+shader_parameter/cloudscale = 1.1
+shader_parameter/speed = 0.03
+shader_parameter/clouddark = 0.5
+shader_parameter/cloudlight = 0.3
+shader_parameter/cloudcover = 0.2
+shader_parameter/cloudalpha = 8.0
+shader_parameter/skytint = 0.5
+shader_parameter/skycolour1 = Vector3(0.05, 0.02, 0.1)
+shader_parameter/skycolour2 = Vector3(0.4, 0.7, 1)
+shader_parameter/m = Transform2D(1.6, -1.2, 1.2, 1.6, 0, 0)
+shader_parameter/brightness = 1.0
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_lkgeh"]
 
@@ -70,7 +83,6 @@ script = ExtResource("1_hp4wh")
 
 [node name="Background" type="Sprite2D" parent="."]
 texture_filter = 1
-material = SubResource("ShaderMaterial_ms4l2")
 position = Vector2(304, 263)
 scale = Vector2(10, 10)
 texture = SubResource("PortableCompressedTexture2D_3s371")
@@ -94,6 +106,21 @@ metadata/_aseprite_wizard_config_ = {
 "source_uid": 8304840320932598451
 }
 metadata/_aseprite_wizard_source_file_hash_ = "e78777b04eaf41a24fb01c63e5b45f50"
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+material = SubResource("ShaderMaterial_uqwdu")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -512.0
+offset_top = -512.0
+offset_right = -512.0
+offset_bottom = -512.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0.362829, 0.362829, 0.362829, 1)
 
 [node name="Sun" type="RigidBody2D" parent="." groups=["die_on_collision"]]
 collision_layer = 3

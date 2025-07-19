@@ -29,7 +29,7 @@ func _ready():
 	player.planets = planets
 	set_fx()
 	_setup_shockwave()   # NEW
-	
+
 
 
 func _find_free_position(new_radius: float) -> Vector2:
@@ -90,17 +90,17 @@ func _init_planet_dynamics(planet: RigidBody2D):
 func set_fx():
 	var fx: PostFx = $PostFX
 	var crt: CRTShaderFX = fx.effects[0]
-	crt.resolution = Vector2(1920.0, 1080.0)
+	crt.resolution = Vector2(1280.0, 960.0)
 	crt.roll = false
 	crt.roll_size = 0
-	crt.aberration = 0.001
-	crt.scanlines_opacity = 0.02
-	crt.grille_opacity = 0.002
+	crt.aberration = 0.01
+	crt.scanlines_opacity = 0.00
+	crt.grille_opacity = 0.000
 	crt.warp_amount	= 0.8
-	crt.distort_intensity = 0
+	crt.distort_intensity = 0.0
 	crt.noise_opacity = 0
-	crt.static_noise_intensity = 0.08
-	crt.pixelate = false
+	crt.static_noise_intensity = 0.1
+	crt.pixelate = true
 
 # ------------------------------------------------------------------
 # Shock-wave screen-space effect

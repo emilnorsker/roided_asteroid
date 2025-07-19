@@ -40,9 +40,6 @@ func _ready():
 
 func _on_body_entered(body: Node) -> void:
 	print("Hit: ", body.name)
-	var sat = body as Satellite
-	if sat:
-		sat.destroy()
 	if body.is_in_group("die_on_collision"):
 		print("Died")
 		_die()
