@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://dahq14okd0t2s"]
+[gd_scene load_steps=7 format=3 uid="uid://dahq14okd0t2s"]
 
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="1_1odxm"]
 [ext_resource type="Texture2D" uid="uid://4fi82yembwks" path="res://assets/earth.png" id="2_mtr83"]
+[ext_resource type="PackedScene" uid="uid://csow0uojosceb" path="res://satellite.tscn" id="3_a75xc"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_mtr83"]
 friction = 0.8
@@ -42,3 +43,11 @@ gravity = 1000.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("CircleShape2D_a75xc")
+
+[node name="Satellite" parent="." node_paths=PackedStringArray("center_node") instance=ExtResource("3_a75xc")]
+position = Vector2(-406, -87)
+center_node = NodePath("..")
+
+[node name="Satellite2" parent="." node_paths=PackedStringArray("center_node") instance=ExtResource("3_a75xc")]
+position = Vector2(438, -129)
+center_node = NodePath("..")

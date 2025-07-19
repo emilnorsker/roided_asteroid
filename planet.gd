@@ -3,7 +3,7 @@ extends RigidBody2D
 
 func set_new_scale(new_scale: int) -> void:
 	$Sprite2D.scale = Vector2(new_scale, new_scale)
-	mass = 1000 * new_scale
+	#mass = 1000 * new_scale
 	
 	var shape = CircleShape2D.new()
 	shape.radius = 58.0 * new_scale

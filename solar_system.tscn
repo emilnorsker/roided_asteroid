@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=19 format=4 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dwtn3w3fo5cit" path="res://assets/asteroid.png" id="4_auk15"]
 [ext_resource type="Script" uid="uid://d15nobs3uuxeb" path="res://addons/postfx/nodes/PostFX.gd" id="4_fcwkm"]
 [ext_resource type="Script" uid="uid://bvbw3ejkm2bck" path="res://addons/postfx/scripts/FXBase.gd" id="5_3s371"]
+[ext_resource type="Script" uid="uid://phuwmce72hmx" path="res://camera_2d.gd" id="5_lkgeh"]
 [ext_resource type="Script" uid="uid://2d4v81y7bb77" path="res://addons/postfx/effects/CRTFX.gd" id="6_lkgeh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ms4l2"]
@@ -126,7 +127,6 @@ collision_layer = 3
 collision_mask = 3
 mass = 30.0
 physics_material_override = SubResource("PhysicsMaterial_3s371")
-gravity_scale = 0.0
 inertia = 5.55
 linear_velocity = Vector2(400, 0)
 angular_velocity = 6.98132
@@ -135,6 +135,7 @@ script = ExtResource("3_tfb7d")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(0.8, 0.8)
+script = ExtResource("5_lkgeh")
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(0.53809, 0.570012)
