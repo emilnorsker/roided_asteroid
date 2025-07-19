@@ -34,7 +34,6 @@ func _ready():
 		sprite.material = sprite.material.duplicate()
 		sprite.material.set_shader_parameter("progress", 0.0)
 
-
 func _set_new_scale(new_scale: int) -> void:
 	orbit_radius = 120.0 * new_scale
 
@@ -43,12 +42,9 @@ func _explode():
 	if _exploding:
 		return
 	_exploding = true
-
 	# Disable collision to avoid further interactions during explosion
 	collision_layer = 0
 	collision_mask = 0
-	linear_velocity = Vector2.ZERO
-	angular_velocity = 0.0
 
 	var sprite: Sprite2D = $Sprite2D
 	var mat: ShaderMaterial = sprite.material as ShaderMaterial
@@ -58,22 +54,31 @@ func _explode():
 		# Animate shader dissolve
 		tween.tween_property(mat, "shader_parameter/progress", 1.0, 0.6)
 		# Simultaneously scale up the sprite for a burst effect
-		tween.tween_property(sprite, "scale", sprite.scale * 8.0, 0.6)
+		$AnimationPlayer.play("explode")
 		tween.connect("finished", Callable(self, "queue_free"))
 	else:
 		queue_free()
-
-# Called through the RigidBody2D signal configured in the scene
-func _on_body_entered(body):
-	if body.name.begins_with("Planet") or body.name == "Player":
-		_explode()
 
 
 func destroy():
 	# Apply a blast impulse opposite to the player, if we can find them
 	var player := get_tree().get_root().get_node_or_null("SolarSystem/Player")
+	var ss := get_tree().get_root().get_node_or_null("SolarSystem")
+	ss.trigger_shockwave(global_position)
+	
 	if player:
 		var dir: Vector2 = (global_position - player.global_position).normalized()
 		var impulse: Vector2 = dir * 800_000.0 + player.linear_velocity * mass
 		apply_impulse(dir, impulse)
 	_explode()
+
+func _on_body_entered(body):
+	if body.name.begins_with("Planet") or body.name == "Player":
+		# Trigger screen shockwave when hitting player
+		if body.name == "Player":
+			var ss := get_tree().get_root().get_node_or_null("SolarSystem")
+			if ss and ss.has_method("trigger_shockwave"):
+				ss.trigger_shockwave(body.global_position)
+				if ss.has_method("trigger_slowmo"):
+					ss.trigger_slowmo(0.3, 0.15)
+		_explode()

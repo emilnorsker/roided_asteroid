@@ -14,7 +14,6 @@ float random(vec2 st) {
 void vertex() {
 	position = VERTEX;
 }
-uniform float stars_density: hint_range(0.0, 1.0, 0.001) = 0.01;
 
 // ✱ NEW: twinkle controls ----------------------------------------------------
 uniform float twinkle_speed   : hint_range(0.0, 10.0) = 2.0;   // cycles / sec
