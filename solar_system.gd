@@ -3,8 +3,6 @@ extends Node2D
 
 var planet_scene = preload("res://planet.tscn")
 var satellite_scene = preload("res://satellite.tscn")
-var tex_satellite_1 = preload("res://assets/satelite_1.png")
-var tex_satellite_2 = preload("res://assets/satelite_2.png")
 
 var planets: Array = []
 

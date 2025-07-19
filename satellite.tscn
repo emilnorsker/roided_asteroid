@@ -1,3 +1,16 @@
-[gd_scene format=3 uid="uid://csow0uojosceb"]
+[gd_scene load_steps=4 format=3 uid="uid://csow0uojosceb"]
 
-[node name="satellite" type="Node2D"]
+[ext_resource type="Script" uid="uid://bedv7kb7ey0y8" path="res://satellite.gd" id="1_47pra"]
+[ext_resource type="Texture2D" uid="uid://bdhi3yjn5qcr2" path="res://assets/satelite_1.png" id="1_u2kwt"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_47pra"]
+
+[node name="Satellite" type="RigidBody2D"]
+gravity_scale = 0.0
+script = ExtResource("1_47pra")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_u2kwt")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_47pra")
