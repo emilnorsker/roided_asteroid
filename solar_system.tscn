@@ -1,8 +1,8 @@
-[gd_scene load_steps=19 format=4 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=20 format=4 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
-[ext_resource type="PackedScene" uid="uid://c6xs6rnnuvofu" path="res://gameui.tscn" id="2_lkgeh"]
+[ext_resource type="PackedScene" path="res://gameui.tscn" id="2_lkgeh"]
 [ext_resource type="Texture2D" uid="uid://bi52y7yu8ayyb" path="res://assets/sun.png" id="3_lkgeh"]
 [ext_resource type="Script" uid="uid://c18fybvvb02v8" path="res://player.gd" id="3_tfb7d"]
 [ext_resource type="Texture2D" uid="uid://dwtn3w3fo5cit" path="res://assets/asteroid.png" id="4_auk15"]
@@ -127,8 +127,8 @@ shape = SubResource("CircleShape2D_fcwkm")
 
 [node name="Player" type="RigidBody2D" parent="."]
 position = Vector2(586, -203)
-collision_layer = 3
-collision_mask = 3
+collision_layer = 7
+collision_mask = 7
 mass = 30.0
 physics_material_override = SubResource("PhysicsMaterial_3s371")
 inertia = 5.55
