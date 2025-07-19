@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
-[ext_resource type="PackedScene" path="res://gameui.tscn" id="2_lkgeh"]
+[ext_resource type="PackedScene" uid="uid://c6xs6rnnuvofu" path="res://gameui.tscn" id="2_lkgeh"]
 [ext_resource type="Texture2D" uid="uid://bi52y7yu8ayyb" path="res://assets/sun.png" id="3_lkgeh"]
 [ext_resource type="Script" uid="uid://c18fybvvb02v8" path="res://player.gd" id="3_tfb7d"]
 [ext_resource type="Texture2D" uid="uid://dwtn3w3fo5cit" path="res://assets/asteroid.png" id="4_auk15"]
