@@ -133,6 +133,7 @@ func _setup_shockwave():
 	_shockwave_rect = rect
 
 func trigger_shockwave(world_pos: Vector2):
+	trigger_slowmo(0.2, 0.05)
 	if _shockwave_rect == null:
 		return
 	var cam := get_viewport().get_camera_2d()
@@ -148,13 +149,13 @@ func trigger_shockwave(world_pos: Vector2):
 
 	var mat: ShaderMaterial = _shockwave_rect.material as ShaderMaterial
 	mat.set_shader_parameter("center", uv)
-	mat.set_shader_parameter("radius", 0.05)
+	mat.set_shader_parameter("radius", 0.1)
 
 	_shockwave_rect.visible = true
 
 	var t := create_tween()
 	# Grow a bit larger and slower for a punchier feel
-	const FINAL_RADIUS := 0.2
+	const FINAL_RADIUS := 0.25
 	const DURATION := 0.3
 	t.tween_property(mat, "shader_parameter/radius", FINAL_RADIUS, DURATION)
 	t.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)

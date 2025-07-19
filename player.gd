@@ -69,6 +69,9 @@ func _die():
 	#get_tree().current_scene.add_child(explosion)
 
 	# Show death label
+	$"../AudioStreamPlayer2D3".stream = preload("res://assets/sounds/game over.mp3")
+	$"../AudioStreamPlayer2D3".playing = true
+	$"../AudioStreamPlayer2D3".play(1.9)
 	$"../GameUI".diedLabel(points, true)
 	#get_tree().paused = true  # freeze game
 

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://benbigcd5wed1"
+path="res://.godot/imported/death 2.mp3-a2e0b2908e97661fbd4b88bd67b6f6a8.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/death 2.mp3"
+dest_files=["res://.godot/imported/death 2.mp3-a2e0b2908e97661fbd4b88bd67b6f6a8.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

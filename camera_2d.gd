@@ -16,6 +16,7 @@ extends Camera2D
 @export var margin: float = 164.0      # extra padding to keep Sun off the very edge
 @export var intro_zoom_factor: float = 1.5   # How much tighter than max_zoom we start.
 @export var intro_zoom_time  : float = 3.0   # Seconds it takes to ease-out.
+@export var zoom_lerp_speed : float = 4.0   # How fast the camera zoom catches up per second.
 
 # Internal
 var _intro_done := false
@@ -46,9 +47,11 @@ func _physics_process(_dt: float) -> void:
 	if not _intro_done:
 		return
 
-	# --- original body unchanged ------------------------------------------
+	# --- smoothly approach desired zoom ----------------------------------
 	var target_zoom: float = _compute_target_zoom()
-	zoom = Vector2(target_zoom, target_zoom)
+	var lerp_t: float = clamp(zoom_lerp_speed * _dt, 0.0, 1.0)
+	var new_zoom: float = lerp(zoom.x, target_zoom, lerp_t)
+	zoom = Vector2(new_zoom, new_zoom)
 	# -----------------------------------------------------------------------
 
 func _compute_target_zoom() -> float:
