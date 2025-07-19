@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=4 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=18 format=4 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
@@ -43,7 +43,7 @@ distort_intensity = 0.2
 aberration = 0.03
 noise_opacity = 0.0
 noise_speed = 5.0
-static_noise_intensity = 0.06
+static_noise_intensity = 0.01
 pixelate = true
 discolor = true
 warp_amount = 0.5
@@ -107,6 +107,7 @@ texture = ExtResource("3_lkgeh")
 shape = SubResource("CircleShape2D_aypcb")
 
 [node name="InfluenceCircle" type="Area2D" parent="Sun"]
+visible = false
 collision_layer = 3
 collision_mask = 3
 gravity_space_override = 1
@@ -124,8 +125,9 @@ shadow_enabled = true
 
 [node name="Player" type="RigidBody2D" parent="."]
 position = Vector2(586, -203)
+collision_layer = 3
 collision_mask = 3
-mass = 500.0
+mass = 30.0
 physics_material_override = SubResource("PhysicsMaterial_3s371")
 inertia = 5.55
 linear_velocity = Vector2(400, 0)
@@ -134,7 +136,7 @@ angular_damp = 0.3
 script = ExtResource("3_tfb7d")
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
-zoom = Vector2(0.4, 0.4)
+zoom = Vector2(0.8, 0.8)
 
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 scale = Vector2(0.53809, 0.570012)

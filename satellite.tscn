@@ -1,16 +1,67 @@
-[gd_scene load_steps=4 format=3 uid="uid://csow0uojosceb"]
+[gd_scene load_steps=6 format=4 uid="uid://csow0uojosceb"]
 
 [ext_resource type="Script" uid="uid://bedv7kb7ey0y8" path="res://satellite.gd" id="1_47pra"]
-[ext_resource type="Texture2D" uid="uid://bdhi3yjn5qcr2" path="res://assets/satelite_1.png" id="1_u2kwt"]
+
+[sub_resource type="PortableCompressedTexture2D" id="PortableCompressedTexture2D_u2kwt"]
+_data = PackedByteArray("AAADAAUAAAABAAAAgAAAAEAAAAA0AQAAUklGRiwBAABXRUJQVlA4TB8BAAAvf8APEC9AEEASQnPtT/FABAEk0QSxwv4KCyygpm0jqOsLvchuPzzzHwDb/087kUzBUW27cSMxkI4QZCCg6phAjwsgbc2fy+xYy3YR0X82btsGkrdObO9eAX+iI/R2qVQ6rlZD17rIqtSqYQVd7DpySFYnpQf2+0y4wsBlCCTaZEhIJstdir1U1ruYlbv3cnA1S6HELKw+rk9KyZr5uYI1w7UuZmWzVJZjYV7hmviubUwCtN5FUorfFAxzKnDbNfHf514xlhRhG/RpXfuzcV2jexVFLsb4LfcC0EnXue9zLtBRRYoDV6+O62bAMN2kizDXHNfBjKt3DDOr+pTvar6ulHxd5uyiquDuMl/Xx91lZp4uUHcXubuA68F91y95AAA=")
+size_override = Vector2(128, 64)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_47pra"]
+
+[sub_resource type="Animation" id="Animation_47pra"]
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = false
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.633333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_blaqe"]
+_data = {
+&"default": SubResource("Animation_47pra")
+}
 
 [node name="Satellite" type="RigidBody2D"]
 gravity_scale = 0.0
 script = ExtResource("1_47pra")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_u2kwt")
+texture_filter = 1
+texture = SubResource("PortableCompressedTexture2D_u2kwt")
+hframes = 2
+metadata/_aseprite_wizard_interface_config_ = {
+"animation_section": true,
+"pending_changes": {}
+}
+metadata/_aseprite_wizard_config_ = {
+"embed_tex": true,
+"i_mode": 0,
+"keep_anim_length": false,
+"layers": [],
+"o_ex_p": "",
+"o_folder": "",
+"o_name": "",
+"only_visible": false,
+"player": "AnimationPlayer",
+"scale": "1.0",
+"slice": "",
+"source": "res://assets/satelite_1.aseprite",
+"source_uid": 7783530549183226199
+}
+metadata/_aseprite_wizard_source_file_hash_ = "e7288277d20de8e934a92295a37a2c24"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_47pra")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_blaqe")
+}
+autoplay = "default"

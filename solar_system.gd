@@ -91,10 +91,10 @@ func _spawn_satellites(planet: Node2D, count: int):
 
 		# Choose texture based on planet texture
 		var tex_path = planet.get_node("Sprite2D").texture.resource_path
-		if "earth.png" in tex_path:
-			sat.get_node("Sprite2D").texture = preload("res://assets/satelite_1.png")
-		else:
-			sat.get_node("Sprite2D").texture = preload("res://assets/satelite_2.png")
+		#if "earth.png" in tex_path:
+			#sat.get_node("Sprite2D").texture = preload("res://assets/satelite_1.png")
+		#else:
+			#sat.get_node("Sprite2D").texture = preload("res://assets/satelite_2.png")
 
 		add_child(sat)
 
@@ -109,9 +109,11 @@ func set_fx():
 	crt.resolution = Vector2(1920.0, 1080.0)
 	crt.roll = false
 	crt.roll_size = 0
-	crt.aberration = 0.01
+	crt.aberration = 0.001
 	crt.scanlines_opacity = 0.02
 	crt.grille_opacity = 0.002
 	crt.warp_amount	= 0.8
 	crt.distort_intensity = 0
 	crt.noise_opacity = 0
+	crt.static_noise_intensity = 0.1
+	crt.pixelate = false
