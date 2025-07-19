@@ -28,7 +28,7 @@ _data = {
 &"default": SubResource("Animation_47pra")
 }
 
-[node name="Satellite" type="RigidBody2D"]
+[node name="Satellite" type="RigidBody2D" groups=["points_on_collision"]]
 gravity_scale = 0.0
 script = ExtResource("1_47pra")
 
@@ -59,6 +59,7 @@ metadata/_aseprite_wizard_source_file_hash_ = "e7288277d20de8e934a92295a37a2c24"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_47pra")
+one_way_collision_margin = 20.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

@@ -2,6 +2,7 @@ extends RigidBody2D
 
 # --- Designer knobs ---------------------------------------------------------
 @export var show_debug_path: bool = true
+@export var points = 0
 
 # Preview
 const BOOST_IMPULSE: float = 700.0
@@ -10,6 +11,8 @@ const GRAVITY_EXPONENT: float = 1.2  # 1 = slow fall-off, 2 = inverse-square
 
 const PRED_TIME: float = 1.0
 const PRED_STEPS: int = 10
+
+var ui: Node  # this will be set externally
 
 # Reference to Sun's gravity area for prediction
 @onready var sun_area: Area2D = get_node("../Sun/InfluenceCircle")
@@ -36,7 +39,14 @@ func _ready():
 
 
 func _on_body_entered(body: Node) -> void:
-	print("Player collided with %s" % body.name)
+	print("Hit: ", body.name)
+	if body.is_in_group("die_on_collision"):
+		print("Died")
+		_die()
+	elif body.is_in_group("points_on_collision"):
+		print("Points")
+		points += 100
+		$"../GameUI".updatePoints(points)
 
 func _physics_process(dt: float) -> void:
 	var thrust := Vector2(
@@ -50,6 +60,21 @@ func _physics_process(dt: float) -> void:
 	linear_velocity = linear_velocity.clamp(Vector2(-1500, -1500), Vector2(1500, 1500))
 	if show_debug_path:
 		queue_redraw()
+
+func _die():
+	# Explosion effect
+	#var explosion_scene = preload("res://scenes/Explosion.tscn")
+	#var explosion = explosion_scene.instantiate()
+	#explosion.global_position = global_position
+	#get_tree().current_scene.add_child(explosion)
+
+	# Show death label
+	$"../GameUI".diedLabel(points, true)
+	#get_tree().paused = true  # freeze game
+
+	# Disable player (or remove)
+	queue_free()
+
 
 func _draw():
 	if !show_debug_path:

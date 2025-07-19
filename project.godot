@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Roided Asteroid"
-run/main_scene="uid://pp4oek53g8bc"
+run/main_scene="uid://4um7yrybrgkj"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -23,6 +23,11 @@ window/size/viewport_height=1080
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/postfx/plugin.cfg")
+
+[global_group]
+
+die_on_collision=""
+points_on_collision=""
 
 [input]
 

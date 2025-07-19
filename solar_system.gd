@@ -25,6 +25,7 @@ func _ready():
 	var player = $Player
 	player.planets = planets
 	set_fx()
+	
 
 
 func _find_free_position(new_radius: float) -> Vector2:
