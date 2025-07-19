@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=4 uid="uid://4um7yrybrgkj"]
+[gd_scene load_steps=21 format=4 uid="uid://4um7yrybrgkj"]
 
 [ext_resource type="Script" uid="uid://ckv343qvswke3" path="res://solar_system.gd" id="1_hp4wh"]
 [ext_resource type="Script" uid="uid://04cy3iiokd3u" path="res://planet.gd" id="2_3s371"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://bvbw3ejkm2bck" path="res://addons/postfx/scripts/FXBase.gd" id="5_3s371"]
 [ext_resource type="Script" uid="uid://phuwmce72hmx" path="res://camera_2d.gd" id="5_lkgeh"]
 [ext_resource type="Script" uid="uid://2d4v81y7bb77" path="res://addons/postfx/effects/CRTFX.gd" id="6_lkgeh"]
+[ext_resource type="AudioStream" uid="uid://ceae06u4yeqrq" path="res://assets/sounds/musik good.mp3" id="11_wc7ei"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ms4l2"]
 
@@ -66,13 +67,21 @@ glow_map = ExtResource("3_lkgeh")
 [node name="SolarSystem" type="Node2D"]
 script = ExtResource("1_hp4wh")
 
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="."]
+scale = Vector2(0.994318, 1)
+stream = ExtResource("11_wc7ei")
+volume_db = 10.0
+autoplay = true
+max_distance = 2e+08
+parameters/looping = true
+
 [node name="GameUI" parent="." instance=ExtResource("2_lkgeh")]
 
 [node name="Background" type="Sprite2D" parent="."]
 texture_filter = 1
 material = SubResource("ShaderMaterial_ms4l2")
 position = Vector2(304, 263)
-scale = Vector2(10, 10)
+scale = Vector2(1323.57, 1617.61)
 texture = SubResource("PortableCompressedTexture2D_3s371")
 metadata/_aseprite_wizard_interface_config_ = {
 "layer_section": true,
@@ -126,7 +135,7 @@ gravity = 24.0
 shape = SubResource("CircleShape2D_fcwkm")
 
 [node name="Player" type="RigidBody2D" parent="."]
-position = Vector2(586, -203)
+position = Vector2(3840, -448)
 collision_layer = 7
 collision_mask = 7
 mass = 30.0
@@ -148,6 +157,12 @@ texture = ExtResource("4_auk15")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 shape = SubResource("CircleShape2D_swmsm")
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Player"]
+position = Vector2(-586, 203)
+scale = Vector2(0.994318, 1)
+volume_db = 10.0
+autoplay = true
+
 [node name="PostFX" type="CanvasLayer" parent="."]
 script = ExtResource("4_fcwkm")
 effects = Array[ExtResource("5_3s371")]([SubResource("Resource_swmsm")])
@@ -156,3 +171,10 @@ metadata/_custom_type_script = "uid://d15nobs3uuxeb"
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3s371")
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(3254, -245)
+scale = Vector2(0.994318, 1)
+volume_db = 10.0
+autoplay = true
+max_distance = 2e+07

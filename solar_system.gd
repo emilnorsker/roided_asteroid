@@ -133,6 +133,7 @@ func _setup_shockwave():
 	_shockwave_rect = rect
 
 func trigger_shockwave(world_pos: Vector2):
+	trigger_slowmo(0.2, 0.05)
 	if _shockwave_rect == null:
 		return
 	var cam := get_viewport().get_camera_2d()

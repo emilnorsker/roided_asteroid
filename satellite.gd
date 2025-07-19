@@ -65,12 +65,24 @@ func destroy():
 	var player := get_tree().get_root().get_node_or_null("SolarSystem/Player")
 	var ss := get_tree().get_root().get_node_or_null("SolarSystem")
 	ss.trigger_shockwave(global_position)
+	play_destroy_sound(get_tree().get_root().get_node_or_null("SolarSystem/Player/AudioStreamPlayer2D"))
 	
 	if player:
 		var dir: Vector2 = (global_position - player.global_position).normalized()
 		var impulse: Vector2 = dir * 800_000.0 + player.linear_velocity * mass
 		apply_impulse(dir, impulse)
 	_explode()
+
+var sounds = [
+	preload("res://assets/sounds/explosion.mp3"),
+	preload("res://assets/sounds/death_3.mp3"),
+	preload("res://assets/sounds/clink.mp3"),
+]
+
+func play_destroy_sound(audio_player: AudioStreamPlayer2D):
+	audio_player.stream = sounds.pick_random()
+	audio_player.play(1.0)
+	
 
 func _on_body_entered(body):
 	if body.name.begins_with("Planet") or body.name == "Player":

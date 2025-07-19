@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://druxl6guiu0tv"
+path="res://.godot/imported/musik one.mp3-ff13f53cb73c055683d64bfedbe5b0e2.mp3str"
+
+[deps]
+
+source_file="res://assets/sounds/musik one.mp3"
+dest_files=["res://.godot/imported/musik one.mp3-ff13f53cb73c055683d64bfedbe5b0e2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
