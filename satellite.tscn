@@ -1,6 +1,19 @@
-[gd_scene load_steps=6 format=4 uid="uid://csow0uojosceb"]
+[gd_scene load_steps=12 format=4 uid="uid://csow0uojosceb"]
 
 [ext_resource type="Script" uid="uid://bedv7kb7ey0y8" path="res://satellite.gd" id="1_47pra"]
+[ext_resource type="Shader" uid="uid://cau5qwp0ym3y" path="res://satellite.gdshader" id="2_47pra"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_47pra"]
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_blaqe"]
+noise = SubResource("FastNoiseLite_47pra")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_47pra"]
+shader = ExtResource("2_47pra")
+shader_parameter/noise_tex = SubResource("NoiseTexture2D_blaqe")
+shader_parameter/progress = 0.5
+shader_parameter/strength = 0.18
 
 [sub_resource type="PortableCompressedTexture2D" id="PortableCompressedTexture2D_u2kwt"]
 _data = PackedByteArray("AAADAAUAAAABAAAAgAAAAEAAAAA0AQAAUklGRiwBAABXRUJQVlA4TB8BAAAvf8APEC9AEEASQnPtT/FABAEk0QSxwv4KCyygpm0jqOsLvchuPzzzHwDb/087kUzBUW27cSMxkI4QZCCg6phAjwsgbc2fy+xYy3YR0X82btsGkrdObO9eAX+iI/R2qVQ6rlZD17rIqtSqYQVd7DpySFYnpQf2+0y4wsBlCCTaZEhIJstdir1U1ruYlbv3cnA1S6HELKw+rk9KyZr5uYI1w7UuZmWzVJZjYV7hmviubUwCtN5FUorfFAxzKnDbNfHf514xlhRhG/RpXfuzcV2jexVFLsb4LfcC0EnXue9zLtBRRYoDV6+O62bAMN2kizDXHNfBjKt3DDOr+pTvar6ulHxd5uyiquDuMl/Xx91lZp4uUHcXubuA68F91y95AAA=")
@@ -24,17 +37,52 @@ tracks/0/keys = {
 "values": [0, 1]
 }
 
+[sub_resource type="Animation" id="Animation_blaqe"]
+resource_name = "explode"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.997148),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(10, 10)]
+}
+
+[sub_resource type="Animation" id="Animation_tyeb2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_blaqe"]
 _data = {
-&"default": SubResource("Animation_47pra")
+&"RESET": SubResource("Animation_tyeb2"),
+&"default": SubResource("Animation_47pra"),
+&"explode": SubResource("Animation_blaqe")
 }
 
 [node name="Satellite" type="RigidBody2D" groups=["points_on_collision"]]
+collision_layer = 4
+collision_mask = 4
 gravity_scale = 0.0
 script = ExtResource("1_47pra")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture_filter = 1
+texture_filter = 3
+material = SubResource("ShaderMaterial_47pra")
 texture = SubResource("PortableCompressedTexture2D_u2kwt")
 hframes = 2
 metadata/_aseprite_wizard_interface_config_ = {
