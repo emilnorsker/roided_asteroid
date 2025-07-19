@@ -1,9 +1,10 @@
-extends Node2D
+extends RigidBody2D
+class_name Satellite
 
 @export var orbit_radius: float = 40.0
 @export var orbit_speed: float = 1.0   # radians/sec
 var angle := 0.0
-var center_node: Node2D
+var center_node: RigidBody2D
 
 func _ready():
 	if !center_node:
@@ -21,3 +22,7 @@ func _process(delta):
 func _on_Area2D_body_entered(body):
 	if body.name.begins_with("Planet") or body.name == "Player":
 		queue_free()  # Satellite explodes (simple version)
+
+func _set_new_scale(new_scale: int) -> void:
+	orbit_radius = 40.0 * new_scale
+	

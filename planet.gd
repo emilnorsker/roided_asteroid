@@ -19,4 +19,9 @@ func set_new_scale(new_scale: int) -> void:
 	grav_shape.radius = 58.0 * new_scale * 5.0
 	
 	$Area2D/CollisionShape2D.shape = grav_shape
+
+	for child in get_children():
+		var sat = child as Satellite
+		if sat:
+			sat._set_new_scale(new_scale)
 	
