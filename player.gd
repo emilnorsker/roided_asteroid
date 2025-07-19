@@ -27,9 +27,16 @@ var planets = []
 
 # Optional: give the ship an initial drift
 func _ready():
-	linear_velocity = Vector2.ZERO
 	if sun_area:
 		mu = sun_area.gravity * pow(sun_area.gravity_point_unit_distance, 2)
+	# Enable collision callbacks and print when we hit something.
+	contact_monitor = true
+	max_contacts_reported = 10  # how many simultaneous contacts to track
+	body_entered.connect(_on_body_entered)
+
+
+func _on_body_entered(body: Node) -> void:
+	print("Player collided with %s" % body.name)
 
 func _physics_process(dt: float) -> void:
 	var thrust := Vector2(
@@ -65,22 +72,4 @@ func _draw():
 		p_vel.append(planet.linear_velocity)
 
 	for _step in PRED_STEPS:
-		# ----------------------------------------
-		# Update planets (sun-centric two-body)
-		for idx in p_pos.size():
-			var pp: Vector2 = p_pos[idx]
-			var acc_p: Vector2 = -mu * pp / pow(max(1.0, pp.length_squared()), 1.5)
-			p_vel[idx] += acc_p * dt
-			p_pos[idx] += p_vel[idx] * dt
-		# ----------------------------------------n
-		# Acceleration on player
-		var acc: Vector2 = -mu * pos / pow(max(1.0, pos.length_squared()), 1.5)
-		for idx in p_pos.size():
-			var area: Area2D = planets[idx].get_node_or_null("Area2D")
-			if area:
-				var mu_p = area.gravity * pow(area.gravity_point_unit_distance, 2)
-				var r_vec: Vector2 = pos - p_pos[idx]
-				acc += -mu_p * r_vec / pow(max(1.0, r_vec.length_squared()), 1.5)
-		vel += acc * dt
-		pos += vel * dt
 		draw_circle(to_local(pos), dot_r, Color.YELLOW)

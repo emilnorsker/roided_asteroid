@@ -24,7 +24,6 @@ func _ready():
 
 	var player = $Player
 	player.planets = planets
-
 	set_fx()
 
 
@@ -55,7 +54,7 @@ func _spawn_planet_no_overlap(tex_path: String):
 	var planet = planet_scene.instantiate()
 
 	# you can randomise scale if desired; here we keep it 1
-	#planet.scale = Vector2.ONE * randf_range(0.5, 3.5)
+	planet.set_new_scale(randf_range(0.5, 3.5))
 	var eff_radius: float = PLANET_BASE_RADIUS * planet.scale.x
 
 	planet.global_position = _find_free_position(eff_radius)
