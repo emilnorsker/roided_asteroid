@@ -121,7 +121,6 @@ texture = ExtResource("3_lkgeh")
 shape = SubResource("CircleShape2D_aypcb")
 
 [node name="InfluenceCircle" type="Area2D" parent="Sun"]
-visible = false
 collision_layer = 3
 collision_mask = 3
 gravity_space_override = 1
@@ -132,17 +131,18 @@ gravity_direction = Vector2(0, 0)
 gravity = 24.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sun/InfluenceCircle"]
+visible = false
 shape = SubResource("CircleShape2D_fcwkm")
 
 [node name="Player" type="RigidBody2D" parent="."]
-position = Vector2(3840, -448)
+position = Vector2(1413, -189)
 collision_layer = 7
 collision_mask = 7
 mass = 30.0
 physics_material_override = SubResource("PhysicsMaterial_3s371")
 inertia = 5.55
 linear_velocity = Vector2(400, 0)
-angular_velocity = 6.98132
+angular_velocity = 2.61799
 angular_damp = 0.3
 script = ExtResource("3_tfb7d")
 
@@ -173,7 +173,7 @@ metadata/_custom_type_script = "uid://d15nobs3uuxeb"
 environment = SubResource("Environment_3s371")
 
 [node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="."]
-position = Vector2(3254, -245)
+position = Vector2(43.0002, 17)
 scale = Vector2(0.994318, 1)
 volume_db = 10.0
 autoplay = true
