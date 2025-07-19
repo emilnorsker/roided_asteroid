@@ -55,7 +55,7 @@ func _spawn_planet_no_overlap(tex_path: String):
 	var planet = planet_scene.instantiate()
 
 	# you can randomise scale if desired; here we keep it 1
-	planet.set_new_scale(randf_range(0.5, 3.5))
+	planet.set_new_scale(randf_range(0.5, 2.5))
 	var eff_radius: float = PLANET_BASE_RADIUS * planet.scale.x
 
 	planet.global_position = _find_free_position(eff_radius)
@@ -83,7 +83,9 @@ func _init_planet_dynamics(planet: RigidBody2D):
 	var tangent_dir: Vector2 = Vector2(-planet.global_position.y, planet.global_position.x).normalized()
 	planet.linear_velocity = tangent_dir * speed
 
-func _spawn_satellites(planet: Node2D, count: int):
+
+func _spawn_satellites(planet: RigidBody2D, count: int):
+	return
 	for i in count:
 		var sat = preload("res://satellite.tscn").instantiate()
 		sat.center_node = planet
